@@ -26,14 +26,14 @@ public class AuthController : ControllerBase
     {
         // Mock authentication - In production, validate against Keycloak/Identity Provider
         var (isValid, user) = ValidateUser(request.Email, request.Password);
-        
+
         if (!isValid)
         {
             return Unauthorized(new { message = "Invalid credentials" });
         }
 
         var token = GenerateJwtToken(user);
-        
+
         return Ok(new
         {
             token = token,
@@ -95,7 +95,7 @@ public class AuthController : ControllerBase
         };
 
         var token = GenerateJwtToken(user);
-        
+
         return Ok(new
         {
             token = token,
@@ -116,8 +116,8 @@ public class AuthController : ControllerBase
             new MockUser { Id = "user-1", Email = "user@hypesoft.com", Name = "Regular User", Role = Roles.User, Password = "user123" }
         };
 
-        var user = mockUsers.FirstOrDefault(u => 
-            u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && 
+        var user = mockUsers.FirstOrDefault(u =>
+            u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) &&
             u.Password == password);
 
         return (user != null, user ?? new MockUser());

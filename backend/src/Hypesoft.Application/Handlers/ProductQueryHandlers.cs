@@ -111,7 +111,7 @@ public class ProductQueryHandlers :
     {
         var skip = (request.Page - 1) * request.PageSize;
         var take = request.PageSize;
-        
+
         var (products, totalCount) = await _productRepository.GetPaginatedAsync(
             skip,
             take,

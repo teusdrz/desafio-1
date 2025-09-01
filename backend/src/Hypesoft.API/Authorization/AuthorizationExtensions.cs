@@ -52,7 +52,7 @@ public static class AuthorizationPolicyExtensions
 
             // Generic user access policy
             options.AddPolicy("RequireUserAccess", policy =>
-                policy.RequireRole(Roles.Admin, Roles.Manager, Roles.User, 
+                policy.RequireRole(Roles.Admin, Roles.Manager, Roles.User,
                                   Roles.ProductManager, Roles.StockManager, Roles.Reporter));            // Permission-based policies
             options.AddPolicy(Permissions.ProductCreate, policy =>
                 policy.Requirements.Add(new PermissionRequirement(Permissions.ProductCreate)));
