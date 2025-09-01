@@ -12,8 +12,8 @@ else
 fi
 
 # Check Frontend using netcat
-echo -n "Frontend (http://localhost:3002): "
-if nc -z localhost 3002 2>/dev/null; then
+echo -n "Frontend (http://localhost:4000): "
+if nc -z localhost 4000 2>/dev/null; then
     echo "✅ RUNNING"
 else
     echo "❌ NOT RESPONDING"
@@ -33,7 +33,7 @@ fi
 echo ""
 echo "🚀 System Status Summary:"
 echo "   Backend API: http://localhost:5000"
-echo "   Frontend UI: http://localhost:3002"
-echo "   Login Page:  http://localhost:3002/login"
+echo "   Frontend UI: http://localhost:4000"
+echo "   Login Page:  http://localhost:4000/login"
 echo ""
 echo "📖 Check TESTING_GUIDE.md for demo users"

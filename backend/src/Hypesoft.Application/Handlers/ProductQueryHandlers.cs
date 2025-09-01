@@ -109,19 +109,19 @@ public class ProductQueryHandlers :
 
     public async Task<ProductListDto> Handle(GetProductsPaginatedQuery request, CancellationToken cancellationToken)
     {
-        var skip = (request.Page - 1) * request.PageSize;
-        var take = request.PageSize;
+        var pageNumber = request.Page;
+        var pageSize = request.PageSize;
 
         var (products, totalCount) = await _productRepository.GetPaginatedAsync(
-            skip,
-            take,
+            pageNumber,
+            pageSize,
             request.SearchTerm,
             request.CategoryId,
-            null, // sortBy
-            false, // sortDescending
             null, // minPrice
             null, // maxPrice
             null, // lowStockOnly
+            "Name", // sortBy
+            "asc", // sortDirection
             cancellationToken);
 
         var productDtos = _mapper.Map<IEnumerable<ProductDto>>(products);

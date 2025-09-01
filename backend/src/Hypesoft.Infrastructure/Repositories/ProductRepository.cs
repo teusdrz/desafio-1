@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Hypesoft.Domain.Entities;
 using Hypesoft.Domain.Repositories;
 using Hypesoft.Infrastructure.Data;
@@ -7,23 +8,29 @@ namespace Hypesoft.Infrastructure.Repositories;
 
 public class ProductRepository : BaseRepository<Product>, IProductRepository
 {
-    public ProductRepository(ApplicationDbContext context) : base(context)
+    private readonly ILogger<ProductRepository> _logger;
+
+    public ProductRepository(ApplicationDbContext context, ILogger<ProductRepository> logger) : base(context)
     {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task<IEnumerable<Product>> GetByCategoryIdAsync(string categoryId, CancellationToken cancellationToken = default)
     {
         return await _dbSet
             .Include(p => p.Category)
-            .Where(p => p.CategoryId == categoryId)
+            .Where(p => p.CategoryId == categoryId && !p.IsDeleted)
             .ToListAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<Product>> SearchByNameAsync(string name, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            return Enumerable.Empty<Product>();
+
         return await _dbSet
             .Include(p => p.Category)
-            .Where(p => p.Name.Contains(name))
+            .Where(p => p.Name.Contains(name) && !p.IsDeleted)
             .ToListAsync(cancellationToken);
     }
 
@@ -31,24 +38,26 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
         return await _dbSet
             .Include(p => p.Category)
-            .Where(p => p.StockQuantity.Value < threshold)
+            .Where(p => p.StockQuantity.Value <= threshold && !p.IsDeleted)
+            .OrderBy(p => p.StockQuantity.Value)
             .ToListAsync(cancellationToken);
     }
 
     public async Task<(IEnumerable<Product> Products, int TotalCount)> GetPaginatedAsync(
-        int skip,
-        int take,
+        int pageNumber,
+        int pageSize,
         string? searchTerm = null,
         string? categoryId = null,
-        string? sortBy = null,
-        bool sortDescending = false,
         decimal? minPrice = null,
         decimal? maxPrice = null,
         bool? lowStockOnly = null,
+        string sortBy = "Name",
+        string sortDirection = "asc",
         CancellationToken cancellationToken = default)
     {
-        var query = _dbSet.Include(p => p.Category).AsQueryable();
+        var query = _dbSet.Include(p => p.Category).Where(p => !p.IsDeleted);
 
+        // Apply filters
         if (!string.IsNullOrEmpty(searchTerm))
         {
             query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
@@ -71,44 +80,45 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 
         if (lowStockOnly.HasValue && lowStockOnly.Value)
         {
-            query = query.Where(p => p.StockQuantity.Value < 10);
+            query = query.Where(p => p.StockQuantity.Value <= 10);
         }
 
-        // Sorting
-        if (!string.IsNullOrEmpty(sortBy))
+        // Apply sorting
+        var isDescending = sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase);
+        query = sortBy.ToLower() switch
         {
-            query = sortBy.ToLower() switch
-            {
-                "name" => sortDescending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
-                "price" => sortDescending ? query.OrderByDescending(p => p.Price.Value) : query.OrderBy(p => p.Price.Value),
-                "stock" => sortDescending ? query.OrderByDescending(p => p.StockQuantity.Value) : query.OrderBy(p => p.StockQuantity.Value),
-                "createdat" => sortDescending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
-                _ => query.OrderBy(p => p.Name)
-            };
-        }
-        else
-        {
-            query = query.OrderBy(p => p.Name);
-        }
+            "name" => isDescending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
+            "price" => isDescending ? query.OrderByDescending(p => p.Price.Value) : query.OrderBy(p => p.Price.Value),
+            "stockquantity" => isDescending ? query.OrderByDescending(p => p.StockQuantity.Value) : query.OrderBy(p => p.StockQuantity.Value),
+            "createdat" => isDescending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
+            _ => query.OrderBy(p => p.Name)
+        };
 
         var totalCount = await query.CountAsync(cancellationToken);
 
+        var skip = (pageNumber - 1) * pageSize;
         var products = await query
             .Skip(skip)
-            .Take(take)
+            .Take(pageSize)
             .ToListAsync(cancellationToken);
 
         return (products, totalCount);
     }
 
+    public async Task<decimal> GetTotalStockValueAsync(CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Where(p => !p.IsDeleted && p.StockQuantity.Value > 0)
+            .SumAsync(p => p.Price.Value * p.StockQuantity.Value, cancellationToken);
+    }
+
     public async Task<Dictionary<string, int>> GetCategoriesCountAsync(CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(p => p.Category)
             .Where(p => !p.IsDeleted)
-            .GroupBy(p => p.Category!.Name)
-            .Select(g => new { CategoryName = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(x => x.CategoryName, x => x.Count, cancellationToken);
+            .GroupBy(p => p.CategoryId)
+            .Select(g => new { CategoryId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.CategoryId, x => x.Count, cancellationToken);
     }
 
     public async Task<(decimal min, decimal max)> GetPriceRangeAsync(CancellationToken cancellationToken = default)
@@ -124,24 +134,31 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
         return (products.Min(), products.Max());
     }
 
-    public async Task<decimal> GetTotalStockValueAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Product>> GetTrendingProductsAsync(int limit = 10, CancellationToken cancellationToken = default)
     {
         return await _dbSet
+            .Include(p => p.Category)
             .Where(p => !p.IsDeleted)
-            .SumAsync(p => p.Price.Value * p.StockQuantity.Value, cancellationToken);
-    }
-
-    public override async Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
-    {
-        return await _dbSet
-            .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
-    }
-
-    public override async Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        return await _dbSet
-            .Include(p => p.Category)
+            .OrderByDescending(p => p.CreatedAt)
+            .Take(limit)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task BulkUpdateStockAsync(Dictionary<string, int> stockUpdates, CancellationToken cancellationToken = default)
+    {
+        var productIds = stockUpdates.Keys.ToList();
+        var products = await _dbSet
+            .Where(p => productIds.Contains(p.Id) && !p.IsDeleted)
+            .ToListAsync(cancellationToken);
+
+        foreach (var product in products)
+        {
+            if (stockUpdates.TryGetValue(product.Id, out var newStock))
+            {
+                product.UpdateStock(newStock);
+            }
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }
