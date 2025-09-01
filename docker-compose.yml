@@ -1,0 +1,158 @@
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: hypesoft-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: HypesoftDB
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - hypesoft-network
+
+  # MongoDB Express (Database Admin UI)
+  mongo-express:
+    image: mongo-express:1.0.0
+    container_name: hypesoft-mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password123
+      ME_CONFIG_MONGODB_URL: mongodb://admin:password123@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb
+    networks:
+      - hypesoft-network
+
+  # Redis Cache
+  redis:
+    image: redis:7.2-alpine
+    container_name: hypesoft-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - hypesoft-network
+
+  # Keycloak Authentication Server
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: hypesoft-keycloak
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak123
+    ports:
+      - "8080:8080"
+    depends_on:
+      - keycloak-db
+    volumes:
+      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    command: ["start-dev", "--import-realm"]
+    networks:
+      - hypesoft-network
+
+  # Keycloak PostgreSQL Database
+  keycloak-db:
+    image: postgres:15-alpine
+    container_name: hypesoft-keycloak-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak123
+    volumes:
+      - keycloak_data:/var/lib/postgresql/data
+    networks:
+      - hypesoft-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hypesoft-backend
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: mongodb://admin:password123@mongodb:27017/HypesoftDB?authSource=admin
+      ConnectionStrings__Redis: redis:6379
+      Authentication__Authority: http://keycloak:8080/realms/hypesoft
+      Authentication__Audience: hypesoft-api
+      ASPNETCORE_URLS: http://+:5000
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongodb
+      - redis
+      - keycloak
+    volumes:
+      - ./backend/logs:/app/logs
+    networks:
+      - hypesoft-network
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hypesoft-frontend
+    restart: unless-stopped
+    environment:
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: your-secret-key-here
+      KEYCLOAK_CLIENT_ID: hypesoft-frontend
+      KEYCLOAK_CLIENT_SECRET: your-client-secret
+      KEYCLOAK_ISSUER: http://localhost:8080/realms/hypesoft
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:5000/api
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    networks:
+      - hypesoft-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: hypesoft-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - hypesoft-network
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  keycloak_data:
+    driver: local
+
+networks:
+  hypesoft-network:
+    driver: bridge

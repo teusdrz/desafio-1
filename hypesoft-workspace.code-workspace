@@ -1,0 +1,304 @@
+{
+    "folders": [
+        {
+            "name": "Root",
+            "path": "."
+        },
+        {
+            "name": "Backend",
+            "path": "./backend"
+        },
+        {
+            "name": "Frontend",
+            "path": "./frontend"
+        },
+        {
+            "name": "Infrastructure",
+            "path": "./infrastructure"
+        },
+        {
+            "name": "Scripts",
+            "path": "./scripts"
+        }
+    ],
+    "settings": {
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "typescript.suggest.autoImports": true,
+        "typescript.updateImportsOnFileMove.enabled": "always",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll.eslint": "explicit"
+        },
+        "files.exclude": {
+            "**/node_modules": true,
+            "**/bin": true,
+            "**/obj": true,
+            "**/.git": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true
+        },
+        "search.exclude": {
+            "**/node_modules": true,
+            "**/bin": true,
+            "**/obj": true,
+            "**/.git": true,
+            "**/coverage": true,
+            "**/dist": true
+        },
+        "eslint.workingDirectories": [
+            "./frontend"
+        ],
+        "dotnet.defaultSolution": "./backend/Hypesoft.sln",
+        "omnisharp.enableEditorConfigSupport": true,
+        "omnisharp.enableRoslynAnalyzers": true,
+        "files.associations": {
+            "*.json": "jsonc"
+        },
+        "docker.commands.build": "${localWorkspaceFolder}/docker-compose.yml",
+        "docker.commands.compose": "${localWorkspaceFolder}/docker-compose.yml"
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-dotnettools.csharp",
+            "ms-dotnettools.vscode-dotnet-runtime",
+            "bradlc.vscode-tailwindcss",
+            "esbenp.prettier-vscode",
+            "dbaeumer.vscode-eslint",
+            "ms-vscode.vscode-typescript-next",
+            "ms-azuretools.vscode-docker",
+            "mongodb.mongodb-vscode",
+            "redhat.vscode-yaml",
+            "ms-vscode.makefile-tools",
+            "ms-vscode.powershell",
+            "formulahendry.auto-rename-tag",
+            "christian-kohler.path-intellisense",
+            "ms-vscode.vscode-json",
+            "yzhang.markdown-all-in-one",
+            "shd101wyy.markdown-preview-enhanced",
+            "ms-vscode-remote.remote-containers"
+        ]
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Build Backend",
+                "type": "shell",
+                "command": "dotnet",
+                "args": [
+                    "build"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}/backend"
+                },
+                "problemMatcher": "$msCompile"
+            },
+            {
+                "label": "Run Backend",
+                "type": "shell",
+                "command": "dotnet",
+                "args": [
+                    "run",
+                    "--project",
+                    "src/Hypesoft.API"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}/backend"
+                },
+                "problemMatcher": "$msCompile",
+                "isBackground": true
+            },
+            {
+                "label": "Test Backend",
+                "type": "shell",
+                "command": "dotnet",
+                "args": [
+                    "test",
+                    "--logger",
+                    "console;verbosity=detailed"
+                ],
+                "group": "test",
+                "options": {
+                    "cwd": "${workspaceFolder}/backend"
+                },
+                "problemMatcher": "$msCompile"
+            },
+            {
+                "label": "Install Frontend Dependencies",
+                "type": "shell",
+                "command": "npm",
+                "args": [
+                    "install"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}/frontend"
+                }
+            },
+            {
+                "label": "Build Frontend",
+                "type": "shell",
+                "command": "npm",
+                "args": [
+                    "run",
+                    "build"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}/frontend"
+                },
+                "dependsOn": "Install Frontend Dependencies"
+            },
+            {
+                "label": "Run Frontend Dev",
+                "type": "shell",
+                "command": "npm",
+                "args": [
+                    "run",
+                    "dev"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}/frontend"
+                },
+                "isBackground": true,
+                "dependsOn": "Install Frontend Dependencies"
+            },
+            {
+                "label": "Test Frontend",
+                "type": "shell",
+                "command": "npm",
+                "args": [
+                    "test"
+                ],
+                "group": "test",
+                "options": {
+                    "cwd": "${workspaceFolder}/frontend"
+                }
+            },
+            {
+                "label": "Docker Compose Up",
+                "type": "shell",
+                "command": "docker-compose",
+                "args": [
+                    "up",
+                    "-d"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "isBackground": true
+            },
+            {
+                "label": "Docker Compose Down",
+                "type": "shell",
+                "command": "docker-compose",
+                "args": [
+                    "down"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                }
+            },
+            {
+                "label": "Docker Compose Build",
+                "type": "shell",
+                "command": "docker-compose",
+                "args": [
+                    "build",
+                    "--no-cache"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                }
+            },
+            {
+                "label": "Setup Project",
+                "type": "shell",
+                "command": "./scripts/dev.sh",
+                "args": [
+                    "setup"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "windows": {
+                    "command": ".\\scripts\\dev.bat",
+                    "args": [
+                        "setup"
+                    ]
+                }
+            },
+            {
+                "label": "Start All Services",
+                "type": "shell",
+                "command": "./scripts/dev.sh",
+                "args": [
+                    "start"
+                ],
+                "group": "build",
+                "options": {
+                    "cwd": "${workspaceFolder}"
+                },
+                "windows": {
+                    "command": ".\\scripts\\dev.bat",
+                    "args": [
+                        "start"
+                    ]
+                },
+                "isBackground": true
+            }
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Launch Backend API",
+                "type": "coreclr",
+                "request": "launch",
+                "preLaunchTask": "Build Backend",
+                "program": "${workspaceFolder}/backend/src/Hypesoft.API/bin/Debug/net9.0/Hypesoft.API.dll",
+                "args": [],
+                "cwd": "${workspaceFolder}/backend/src/Hypesoft.API",
+                "stopAtEntry": false,
+                "serverReadyAction": {
+                    "action": "openExternally",
+                    "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+                },
+                "env": {
+                    "ASPNETCORE_ENVIRONMENT": "Development"
+                },
+                "sourceFileMap": {
+                    "/Views": "${workspaceFolder}/Views"
+                }
+            },
+            {
+                "name": "Launch Frontend (Chrome)",
+                "type": "chrome",
+                "request": "launch",
+                "url": "http://localhost:3000",
+                "webRoot": "${workspaceFolder}/frontend",
+                "preLaunchTask": "Run Frontend Dev"
+            },
+            {
+                "name": "Attach to Backend",
+                "type": "coreclr",
+                "request": "attach"
+            }
+        ],
+        "compounds": [
+            {
+                "name": "Launch Full Stack",
+                "configurations": []
+            }
+        ]
+    }
+}

@@ -1,0 +1,188 @@
+{
+    "realm": "hypesoft",
+    "enabled": true,
+    "displayName": "Hypesoft Realm",
+    "displayNameHtml": "<b>Hypesoft</b> Product Management System",
+    "accessTokenLifespan": 1800,
+    "accessTokenLifespanForImplicitFlow": 900,
+    "ssoSessionIdleTimeout": 1800,
+    "ssoSessionMaxLifespan": 36000,
+    "offlineSessionIdleTimeout": 2592000,
+    "accessCodeLifespan": 60,
+    "accessCodeLifespanUserAction": 300,
+    "accessCodeLifespanLogin": 1800,
+    "actionTokenGeneratedByAdminLifespan": 43200,
+    "actionTokenGeneratedByUserLifespan": 300,
+    "users": [
+        {
+            "username": "admin",
+            "email": "admin@hypesoft.com",
+            "firstName": "System",
+            "lastName": "Administrator",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "admin123",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "admin"
+            ],
+            "clientRoles": {
+                "hypesoft-api": [
+                    "admin"
+                ]
+            }
+        },
+        {
+            "username": "manager",
+            "email": "manager@hypesoft.com",
+            "firstName": "Product",
+            "lastName": "Manager",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "manager123",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "manager"
+            ],
+            "clientRoles": {
+                "hypesoft-api": [
+                    "manager"
+                ]
+            }
+        },
+        {
+            "username": "user",
+            "email": "user@hypesoft.com",
+            "firstName": "Regular",
+            "lastName": "User",
+            "enabled": true,
+            "emailVerified": true,
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "user123",
+                    "temporary": false
+                }
+            ],
+            "realmRoles": [
+                "user"
+            ],
+            "clientRoles": {
+                "hypesoft-api": [
+                    "user"
+                ]
+            }
+        }
+    ],
+    "roles": {
+        "realm": [
+            {
+                "name": "admin",
+                "description": "Administrator role with full access"
+            },
+            {
+                "name": "manager",
+                "description": "Manager role with product management access"
+            },
+            {
+                "name": "user",
+                "description": "Regular user role with read access"
+            }
+        ]
+    },
+    "clients": [
+        {
+            "clientId": "hypesoft-api",
+            "name": "Hypesoft API",
+            "description": "Backend API client",
+            "enabled": true,
+            "clientAuthenticatorType": "client-secret",
+            "secret": "hypesoft-api-secret",
+            "standardFlowEnabled": true,
+            "implicitFlowEnabled": false,
+            "directAccessGrantsEnabled": true,
+            "serviceAccountsEnabled": true,
+            "publicClient": false,
+            "bearerOnly": true,
+            "defaultRoles": [
+                "user"
+            ],
+            "optionalClientScopes": [
+                "email",
+                "profile",
+                "roles"
+            ]
+        },
+        {
+            "clientId": "hypesoft-frontend",
+            "name": "Hypesoft Frontend",
+            "description": "Next.js frontend application",
+            "enabled": true,
+            "clientAuthenticatorType": "client-secret",
+            "secret": "hypesoft-frontend-secret",
+            "standardFlowEnabled": true,
+            "implicitFlowEnabled": false,
+            "directAccessGrantsEnabled": false,
+            "serviceAccountsEnabled": false,
+            "publicClient": false,
+            "bearerOnly": false,
+            "redirectUris": [
+                "http://localhost:3000/*",
+                "http://localhost/*",
+                "https://localhost:3000/*"
+            ],
+            "webOrigins": [
+                "http://localhost:3000",
+                "http://localhost",
+                "https://localhost:3000"
+            ],
+            "defaultRoles": [
+                "user"
+            ],
+            "optionalClientScopes": [
+                "email",
+                "profile",
+                "roles"
+            ]
+        }
+    ],
+    "clientScopes": [
+        {
+            "name": "email",
+            "description": "OpenID Connect built-in scope: email",
+            "protocol": "openid-connect",
+            "attributes": {
+                "include.in.token.scope": "true",
+                "display.on.consent.screen": "true"
+            }
+        },
+        {
+            "name": "profile",
+            "description": "OpenID Connect built-in scope: profile",
+            "protocol": "openid-connect",
+            "attributes": {
+                "include.in.token.scope": "true",
+                "display.on.consent.screen": "true"
+            }
+        },
+        {
+            "name": "roles",
+            "description": "User roles",
+            "protocol": "openid-connect",
+            "attributes": {
+                "include.in.token.scope": "true",
+                "display.on.consent.screen": "false"
+            }
+        }
+    ]
+}
