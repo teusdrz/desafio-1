@@ -110,23 +110,23 @@ export function Navigation() {
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>
                                         <User className="mr-2 h-4 w-4" />
-                                        <span>Perfil</span>
+                                        <span>Profile</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                         <Settings className="mr-2 h-4 w-4" />
-                                        <span>Configurações</span>
+                                        <span>Settings</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem onClick={handleLogout}>
                                         <LogOut className="mr-2 h-4 w-4" />
-                                        <span>Sair</span>
+                                        <span>Sign Out</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         ) : (
                             <Button asChild className="bg-purple-600 hover:bg-purple-700">
                                 <Link href="/login">
-                                    Entrar
+                                    Sign In
                                 </Link>
                             </Button>
                         )}

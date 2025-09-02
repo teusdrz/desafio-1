@@ -71,10 +71,10 @@ export default function HomePage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+                    <p className="text-gray-600">Loading...</p>
                 </div>
             </div>
         );
@@ -86,17 +86,17 @@ export default function HomePage() {
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-950">
+        <div className="min-h-screen bg-white">
             {/* Simple Header for Landing */}
-            <header className="border-b border-gray-200 dark:border-gray-800 px-6 py-4">
+            <header className="border-b border-gray-200 px-6 py-4">
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
                             <Package className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-lg font-bold text-gray-900 dark:text-white">HyperSense</h1>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">Management System</p>
+                            <h1 className="text-lg font-bold text-gray-900">ShopSense</h1>
+                            <p className="text-xs text-gray-500">Management System</p>
                         </div>
                     </div>
                     <Button asChild className="bg-blue-600 hover:bg-blue-700">
@@ -109,13 +109,13 @@ export default function HomePage() {
             <section className="py-20 px-6">
                 <div className="container mx-auto text-center">
                     <div className="max-w-4xl mx-auto">
-                        <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                        <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
                             Management System
                             <br />
-                            <span className="text-4xl md:text-6xl text-blue-600">HyperSense</span>
+                            <span className="text-4xl md:text-6xl text-blue-600">ShopSense</span>
                         </h1>
 
-                        <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                        <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
                             Complete platform for product and category management
                             <br />
                             <span className="text-lg md:text-xl">Built with modern technologies and robust architecture</span>
@@ -126,7 +126,7 @@ export default function HomePage() {
                             {techStack.map((tech, index) => (
                                 <span
                                     key={index}
-                                    className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
                                 >
                                     {tech}
                                 </span>
@@ -146,7 +146,7 @@ export default function HomePage() {
                             <Button
                                 variant="outline"
                                 size="lg"
-                                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-8 py-3 text-lg"
+                                className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-lg"
                                 onClick={() => router.push('#features')}
                             >
                                 Learn More
@@ -157,27 +157,27 @@ export default function HomePage() {
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-20 px-6 bg-gray-50 dark:bg-gray-900">
+            <section id="features" className="py-20 px-6 bg-gray-50">
                 <div className="container mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                        <h2 className="text-4xl font-bold text-gray-900 mb-4">
                             Powerful Features
                         </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                             Everything you need to manage your products and business efficiently
                         </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {features.map((feature, index) => (
-                            <div key={index} className="bg-white dark:bg-gray-950 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow">
-                                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 text-blue-600 dark:text-blue-400">
+                            <div key={index} className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-shadow">
+                                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
                                     {feature.icon}
                                 </div>
-                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                <h3 className="text-xl font-semibold text-gray-900 mb-3">
                                     {feature.title}
                                 </h3>
-                                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                <p className="text-gray-600 leading-relaxed">
                                     {feature.description}
                                 </p>
                             </div>
@@ -187,19 +187,19 @@ export default function HomePage() {
             </section>
 
             {/* Demo Section */}
-            <section className="py-20 px-6 bg-white dark:bg-gray-950">
+            <section className="py-20 px-6 bg-white">
                 <div className="container mx-auto text-center">
                     <div className="max-w-3xl mx-auto">
-                        <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                        <h2 className="text-4xl font-bold text-gray-900 mb-6">
                             Try the Demo
                         </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                        <p className="text-xl text-gray-600 mb-8">
                             Experience the full functionality with our demo accounts
                         </p>
 
-                        <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-8 mb-8 text-left border dark:border-gray-800">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Demo Credentials:</h3>
-                            <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="bg-gray-50 rounded-xl p-8 mb-8 text-left">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Demo Credentials:</h3>
+                            <div className="space-y-2 text-sm text-gray-600">
                                 <p><strong>Admin:</strong> admin@hypesoft.com / admin123</p>
                                 <p><strong>Manager:</strong> manager@hypesoft.com / manager123</p>
                                 <p><strong>User:</strong> user@hypesoft.com / user123</p>

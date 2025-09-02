@@ -139,25 +139,25 @@ public class GlobalExceptionFilter : IExceptionFilter
     {
         if (exception is ArgumentException)
             return "The request contains invalid parameters.";
-        
+
         if (exception is ArgumentNullException)
             return "Required information is missing from the request.";
-        
+
         if (exception is UnauthorizedAccessException)
             return "You are not authorized to perform this operation.";
-        
+
         if (exception is KeyNotFoundException)
             return "The requested resource was not found.";
-        
+
         if (exception is InvalidOperationException)
             return "The requested operation cannot be completed at this time.";
-        
+
         if (exception is NotSupportedException)
             return "The requested operation is not supported.";
-        
+
         if (exception is TimeoutException)
             return "The request timed out. Please try again later.";
-        
+
         return "An unexpected error occurred. Please try again later.";
     }
 }

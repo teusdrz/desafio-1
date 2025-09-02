@@ -17,18 +17,18 @@ export default function UnauthorizedPage() {
                         <ShieldX className="w-8 h-8 text-red-600" />
                     </div>
                     <CardTitle className="text-xl text-red-700">
-                        Acesso Negado
+                        Access Denied
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center space-y-4">
                     <p className="text-gray-600">
-                        Você não possui permissões suficientes para acessar esta página.
+                        You don't have sufficient permissions to access this page.
                     </p>
 
                     {user && (
                         <div className="bg-gray-50 p-3 rounded-lg text-sm">
-                            <p><strong>Usuário:</strong> {user.name}</p>
-                            <p><strong>Papel:</strong> {user.role}</p>
+                            <p><strong>User:</strong> {user.name}</p>
+                            <p><strong>Role:</strong> {user.role}</p>
                         </div>
                     )}
 
@@ -36,14 +36,14 @@ export default function UnauthorizedPage() {
                         <Button asChild className="bg-purple-600 hover:bg-purple-700">
                             <Link href="/products" className="flex items-center gap-2">
                                 <Home className="w-4 h-4" />
-                                Ir para Produtos
+                                Go to Products
                             </Link>
                         </Button>
 
                         <Button variant="outline" asChild>
                             <Link href="javascript:history.back()" className="flex items-center gap-2">
                                 <ArrowLeft className="w-4 h-4" />
-                                Voltar
+                                Go Back
                             </Link>
                         </Button>
                     </div>

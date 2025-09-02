@@ -51,23 +51,12 @@ export const useAuthStore = create<AuthState>()(
                     const mockUser = MOCK_USERS.find(u => u.email === email && u.password === password)
 
                     if (mockUser) {
-                        const allPermissions = [
-                            'product:read', 'product:write', 'product:delete',
-                            'category:read', 'category:write', 'category:delete',
-                            'user:read', 'user:write', 'user:delete',
-                            'statistics:read', 'settings:read', 'settings:write',
-                            'shop:read', 'shop:write', 'shop:delete',
-                            'customer:read', 'customer:write', 'customer:delete',
-                            'invoice:read', 'invoice:write', 'invoice:delete',
-                            'message:read', 'message:write', 'message:delete'
-                        ]
-
                         const user: User = {
                             id: mockUser.email,
                             email: mockUser.email,
                             name: mockUser.role,
                             role: mockUser.role,
-                            permissions: allPermissions
+                            permissions: mockUser.role === 'Admin' ? ['read', 'write', 'delete'] : ['read']
                         }
 
                         set({

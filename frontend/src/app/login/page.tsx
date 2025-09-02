@@ -31,7 +31,7 @@ export default function LoginPage() {
         setError('')
 
         if (!email || !password) {
-            setError('Por favor, preencha todos os campos')
+            setError('Please fill in all fields')
             return
         }
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
         if (success) {
             router.push('/products')
         } else {
-            setError('Credenciais inválidas. Tente novamente.')
+            setError('Invalid credentials. Please try again.')
         }
     }
 
@@ -55,14 +55,14 @@ export default function LoginPage() {
             <div className="w-full max-w-md space-y-6">
                 {/* Header */}
                 <div className="text-center space-y-2">
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl mb-4">
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl mb-4">
                         <Shield className="w-6 h-6 text-white" />
                     </div>
                     <h1 className="text-2xl font-bold text-gray-900">
-                        Bem-vindo ao Hypesoft
+                        Welcome to ShopSense
                     </h1>
                     <p className="text-gray-600">
-                        Entre com suas credenciais para acessar o sistema
+                        Enter your credentials to access the system
                     </p>
                 </div>
 
@@ -71,7 +71,7 @@ export default function LoginPage() {
                     <CardHeader className="pb-3">
                         <CardTitle className="text-sm flex items-center gap-2 text-purple-700">
                             <Users className="w-4 h-4" />
-                            Usuários de Demonstração
+                            Demo Users
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
@@ -82,8 +82,8 @@ export default function LoginPage() {
                                     variant={selectedMockUser === index ? "default" : "outline"}
                                     size="sm"
                                     className={`text-xs ${selectedMockUser === index
-                                            ? "bg-purple-600 hover:bg-purple-700"
-                                            : "border-purple-200 hover:bg-purple-50"
+                                        ? "bg-purple-500 hover:bg-purple-600"
+                                        : "border-purple-200 hover:bg-purple-50"
                                         }`}
                                     onClick={() => handleMockUserSelect(index)}
                                 >
@@ -92,7 +92,7 @@ export default function LoginPage() {
                             ))}
                         </div>
                         <p className="text-xs text-purple-600 mt-2">
-                            Clique em um perfil para preencher automaticamente
+                            Click on a profile to auto-fill credentials
                         </p>
                     </CardContent>
                 </Card>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <LogIn className="w-5 h-5" />
-                            Entrar
+                            Login
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -122,21 +122,21 @@ export default function LoginPage() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="seu@email.com"
+                                    placeholder="your@email.com"
                                     className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                                     disabled={isLoading}
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="password">Senha</Label>
+                                <Label htmlFor="password">Password</Label>
                                 <div className="relative">
                                     <Input
                                         id="password"
                                         type={showPassword ? "text" : "password"}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Sua senha"
+                                        placeholder="Your password"
                                         className="border-gray-300 focus:border-purple-500 focus:ring-purple-500 pr-10"
                                         disabled={isLoading}
                                     />
@@ -161,18 +161,18 @@ export default function LoginPage() {
                                 className="w-full bg-purple-600 hover:bg-purple-700 text-white"
                                 disabled={isLoading}
                             >
-                                {isLoading ? 'Entrando...' : 'Entrar'}
+                                {isLoading ? 'Signing in...' : 'Sign In'}
                             </Button>
                         </form>
                     </CardContent>
                 </Card>
 
                 {/* Info */}
-                <Card className="border-blue-200 bg-blue-50/50">
+                <Card className="border-purple-200 bg-purple-50/50">
                     <CardContent className="pt-6">
-                        <div className="text-center text-sm text-blue-700">
-                            <p className="font-medium mb-1">Sistema de Demonstração</p>
-                            <p>Use os usuários de exemplo acima ou suas próprias credenciais</p>
+                        <div className="text-center text-sm text-purple-700">
+                            <p className="font-medium mb-1">Demo System</p>
+                            <p>Use the demo users above or your own credentials</p>
                         </div>
                     </CardContent>
                 </Card>

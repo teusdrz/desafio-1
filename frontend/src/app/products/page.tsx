@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Search, Filter, Grid3X3, List, Package, TrendingUp, AlertTriangle } from 'lucide-react'
 import { Product } from '@/types/product'
+import { AuthGuard } from '@/components/auth/AuthGuard'
 
 // Mock data for demonstration
 const mockProducts: Product[] = [
@@ -140,188 +141,194 @@ export default function ProductsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-white via-purple-50/30 to-purple-100/20 p-6">
-            <div className="container mx-auto max-w-7xl">
-                {/* Header */}
-                <div className="mb-8">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                        <div>
-                            <h1 className="text-responsive-3xl font-display font-bold gradient-text mb-2">
-                                Product Management
-                            </h1>
-                            <p className="text-gray-600 text-responsive">
-                                Manage your product inventory with comprehensive tools and analytics
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <Button
-                                onClick={() => {
-                                    setEditingProduct(null)
-                                    setShowForm(true)
-                                }}
-                                className="btn-primary"
-                            >
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add Product
-                            </Button>
+        <AuthGuard requiredPermissions={['product:read']}>
+            <div className="min-h-screen bg-gradient-to-br from-white via-purple-50/30 to-purple-100/20 dark:from-gray-950 dark:via-gray-900/80 dark:to-gray-900/60 p-6">
+                <div className="container mx-auto max-w-7xl">
+                    {/* Header */}
+                    <div className="mb-8">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                            <div>
+                                <h1 className="text-responsive-3xl font-display font-bold gradient-text dark:text-white mb-2">
+                                    Product Management
+                                </h1>
+                                <p className="text-gray-600 dark:text-gray-400 text-responsive">
+                                    Manage your product inventory with comprehensive tools and analytics
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <Button
+                                    onClick={() => {
+                                        setEditingProduct(null)
+                                        setShowForm(true)
+                                    }}
+                                    className="btn-primary"
+                                >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add Product
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <Card className="card-elegant">
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <Card className="card-elegant bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
+                            <CardContent className="p-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                                        <Package className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Products</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{products.length}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="card-elegant bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
+                            <CardContent className="p-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                                        <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">${totalValue.toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="card-elegant bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
+                            <CardContent className="p-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                                        <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{lowStockCount}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="card-elegant bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
+                            <CardContent className="p-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                                        <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Out of Stock</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{outOfStockCount}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Filters and Search */}
+                    <Card className="mb-8 glass-card bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
                         <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-purple-100 rounded-lg">
-                                    <Package className="w-6 h-6 text-purple-600" />
-                                </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600">Total Products</p>
-                                    <p className="text-2xl font-bold text-gray-900">{products.length}</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="card-elegant">
-                        <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-green-100 rounded-lg">
-                                    <TrendingUp className="w-6 h-6 text-green-600" />
-                                </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600">Total Value</p>
-                                    <p className="text-2xl font-bold text-gray-900">${totalValue.toLocaleString()}</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="card-elegant">
-                        <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-yellow-100 rounded-lg">
-                                    <AlertTriangle className="w-6 h-6 text-yellow-600" />
-                                </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600">Low Stock</p>
-                                    <p className="text-2xl font-bold text-gray-900">{lowStockCount}</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="card-elegant">
-                        <CardContent className="p-6">
-                            <div className="flex items-center gap-4">
-                                <div className="p-3 bg-red-100 rounded-lg">
-                                    <AlertTriangle className="w-6 h-6 text-red-600" />
-                                </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-600">Out of Stock</p>
-                                    <p className="text-2xl font-bold text-gray-900">{outOfStockCount}</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* Filters and Search */}
-                <Card className="mb-8 glass-card">
-                    <CardContent className="p-6">
-                        <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
-                            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-                                <div className="relative flex-1 max-w-md">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                    <Input
-                                        placeholder="Search products..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="pl-10"
-                                    />
-                                </div>
-                                <div className="flex gap-2 flex-wrap">
-                                    <Button
-                                        variant={selectedCategory === null ? "default" : "outline"}
-                                        size="sm"
-                                        onClick={() => setSelectedCategory(null)}
-                                    >
-                                        All Categories
-                                    </Button>
-                                    {categories.map((category) => (
+                            <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
+                                <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                                    <div className="relative flex-1 max-w-md">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
+                                        <Input
+                                            placeholder="Search products..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="pl-10 bg-white dark:bg-gray-950 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
+                                        />
+                                    </div>
+                                    <div className="flex gap-2 flex-wrap">
                                         <Button
-                                            key={category}
-                                            variant={selectedCategory === category ? "default" : "outline"}
+                                            variant={selectedCategory === null ? "default" : "outline"}
                                             size="sm"
-                                            onClick={() => setSelectedCategory(category)}
+                                            onClick={() => setSelectedCategory(null)}
+                                            className={selectedCategory !== null ? "bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" : ""}
                                         >
-                                            {category}
+                                            All Categories
                                         </Button>
-                                    ))}
+                                        {categories.map((category) => (
+                                            <Button
+                                                key={category}
+                                                variant={selectedCategory === category ? "default" : "outline"}
+                                                size="sm"
+                                                onClick={() => setSelectedCategory(category)}
+                                                className={selectedCategory !== category ? "bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" : ""}
+                                            >
+                                                {category}
+                                            </Button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant={viewMode === 'grid' ? "default" : "outline"}
+                                        size="sm"
+                                        onClick={() => setViewMode('grid')}
+                                        className={viewMode !== 'grid' ? "bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" : ""}
+                                    >
+                                        <Grid3X3 className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                        variant={viewMode === 'list' ? "default" : "outline"}
+                                        size="sm"
+                                        onClick={() => setViewMode('list')}
+                                        className={viewMode !== 'list' ? "bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" : ""}
+                                    >
+                                        <List className="w-4 h-4" />
+                                    </Button>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    variant={viewMode === 'grid' ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => setViewMode('grid')}
-                                >
-                                    <Grid3X3 className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                    variant={viewMode === 'list' ? "default" : "outline"}
-                                    size="sm"
-                                    onClick={() => setViewMode('list')}
-                                >
-                                    <List className="w-4 h-4" />
-                                </Button>
+                        </CardContent>
+                    </Card>
+
+                    {/* Products Grid/List */}
+                    <div className={viewMode === 'grid'
+                        ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                        : "space-y-4"
+                    }>
+                        {filteredProducts.map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                                onView={handleView}
+                                className={viewMode === 'list' ? "flex-row" : ""}
+                            />
+                        ))}
+                    </div>
+
+                    {filteredProducts.length === 0 && (
+                        <div className="text-center py-20">
+                            <Package className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                            <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-2">No products found</h3>
+                            <p className="text-gray-400 dark:text-gray-500">Try adjusting your search or filter criteria</p>
+                        </div>
+                    )}
+
+                    {/* Product Form Modal */}
+                    {showForm && (
+                        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                            <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                                <ProductForm
+                                    product={editingProduct}
+                                    onSave={handleSave}
+                                    onCancel={() => {
+                                        setShowForm(false)
+                                        setEditingProduct(null)
+                                    }}
+                                />
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
-
-                {/* Products Grid/List */}
-                <div className={viewMode === 'grid'
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                    : "space-y-4"
-                }>
-                    {filteredProducts.map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            onEdit={handleEdit}
-                            onDelete={handleDelete}
-                            onView={handleView}
-                            className={viewMode === 'list' ? "flex-row" : ""}
-                        />
-                    ))}
+                    )}
                 </div>
-
-                {filteredProducts.length === 0 && (
-                    <div className="text-center py-20">
-                        <Package className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-500 mb-2">No products found</h3>
-                        <p className="text-gray-400">Try adjusting your search or filter criteria</p>
-                    </div>
-                )}
-
-                {/* Product Form Modal */}
-                {showForm && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                        <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                            <ProductForm
-                                product={editingProduct}
-                                onSave={handleSave}
-                                onCancel={() => {
-                                    setShowForm(false)
-                                    setEditingProduct(null)
-                                }}
-                            />
-                        </div>
-                    </div>
-                )}
             </div>
-        </div>
+        </AuthGuard>
     )
 }

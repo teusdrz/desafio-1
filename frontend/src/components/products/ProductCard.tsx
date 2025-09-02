@@ -42,38 +42,38 @@ export function ProductCard({
 
     if (viewMode === 'list') {
         return (
-            <Card className={cn("glass-card hover:shadow-lg transition-shadow", className)}>
+            <Card className={cn("glass-card hover:shadow-lg transition-shadow bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800", className)}>
                 <CardContent className="p-6">
                     <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                         {/* Product Info */}
                         <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between mb-2">
-                                <h3 className="text-xl font-display font-semibold text-gray-900 truncate">
+                                <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white truncate">
                                     {product.name}
                                 </h3>
                                 <Badge variant={stockStatus.variant} className="ml-2 flex-shrink-0">
                                     {stockStatus.status}
                                 </Badge>
                             </div>
-                            <p className="text-gray-600 font-body mb-3 line-clamp-2">
+                            <p className="text-gray-600 dark:text-gray-400 font-body mb-3 line-clamp-2">
                                 {product.description}
                             </p>
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                                 <span className="flex items-center gap-1">
                                     <Package className="w-4 h-4" />
                                     {product.stockQuantity} units
                                 </span>
-                                <span className="text-gray-300">•</span>
+                                <span className="text-gray-300 dark:text-gray-600">•</span>
                                 <span>{product.categoryName}</span>
                             </div>
                         </div>
 
                         {/* Price */}
                         <div className="text-right">
-                            <div className="text-2xl font-bold text-gray-900 mb-1">
+                            <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                                 ${product.price.toFixed(2)}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
                                 Total: ${(product.price * product.stockQuantity).toLocaleString()}
                             </div>
                         </div>
@@ -85,7 +85,7 @@ export function ProductCard({
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => onView(product)}
-                                    className="h-8 w-8 p-0"
+                                    className="h-8 w-8 p-0 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 >
                                     <Eye className="w-4 h-4" />
                                 </Button>
@@ -95,7 +95,7 @@ export function ProductCard({
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => onEdit(product)}
-                                    className="h-8 w-8 p-0"
+                                    className="h-8 w-8 p-0 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 >
                                     <Edit className="w-4 h-4" />
                                 </Button>
@@ -105,7 +105,7 @@ export function ProductCard({
                                     variant="ghost"
                                     size="sm"
                                     onClick={handleDelete}
-                                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </Button>
@@ -119,21 +119,21 @@ export function ProductCard({
 
     return (
         <Card className={cn(
-            "glass-card group hover:shadow-xl transition-all duration-300 overflow-hidden",
+            "glass-card group hover:shadow-xl transition-all duration-300 overflow-hidden bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800",
             className
         )}>
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
             <CardHeader className="relative pb-3">
                 <div className="flex items-start justify-between mb-2">
-                    <CardTitle className="text-lg font-display font-semibold text-gray-900 line-clamp-2 leading-tight">
+                    <CardTitle className="text-lg font-display font-semibold text-gray-900 dark:text-white line-clamp-2 leading-tight">
                         {product.name}
                     </CardTitle>
                     <Badge variant={stockStatus.variant} className="ml-2 flex-shrink-0">
                         {stockStatus.status}
                     </Badge>
                 </div>
-                <p className="text-sm text-gray-600 font-body line-clamp-3 leading-relaxed">
+                <p className="text-sm text-gray-600 dark:text-gray-400 font-body line-clamp-3 leading-relaxed">
                     {product.description}
                 </p>
             </CardHeader>
@@ -141,9 +141,9 @@ export function ProductCard({
             <CardContent className="relative space-y-4">
                 {/* Price */}
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Price</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Price</span>
                     <div className="text-right">
-                        <div className="text-xl font-bold text-gray-900">
+                        <div className="text-xl font-bold text-gray-900 dark:text-white">
                             ${product.price.toFixed(2)}
                         </div>
                     </div>
@@ -151,10 +151,10 @@ export function ProductCard({
 
                 {/* Stock */}
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Stock</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Stock</span>
                     <div className="flex items-center gap-2">
-                        <Package className="w-4 h-4 text-gray-400" />
-                        <span className={`text-sm font-medium ${product.isLowStock ? 'text-red-600' : 'text-gray-900'
+                        <Package className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                        <span className={`text-sm font-medium ${product.isLowStock ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white'
                             }`}>
                             {product.stockQuantity} units
                         </span>
@@ -163,31 +163,31 @@ export function ProductCard({
 
                 {/* Category */}
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Category</span>
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Category</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                         {product.categoryName}
                     </span>
                 </div>
 
                 {/* Total Value */}
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                    <span className="text-sm text-gray-500">Total Value</span>
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Total Value</span>
                     <div className="flex items-center gap-1">
-                        <DollarSign className="w-4 h-4 text-green-600" />
-                        <span className="text-sm font-semibold text-green-600">
+                        <DollarSign className="w-4 h-4 text-green-600 dark:text-green-400" />
+                        <span className="text-sm font-semibold text-green-600 dark:text-green-400">
                             ${(product.price * product.stockQuantity).toLocaleString()}
                         </span>
                     </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+                <div className="flex items-center gap-2 pt-4 border-t border-gray-100 dark:border-gray-800">
                     {onView && (
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => onView(product)}
-                            className="flex-1 text-xs"
+                            className="flex-1 text-xs bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                         >
                             <Eye className="w-3 h-3 mr-1" />
                             View
@@ -198,7 +198,7 @@ export function ProductCard({
                             variant="outline"
                             size="sm"
                             onClick={() => onEdit(product)}
-                            className="flex-1 text-xs"
+                            className="flex-1 text-xs bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                         >
                             <Edit className="w-3 h-3 mr-1" />
                             Edit
@@ -209,7 +209,7 @@ export function ProductCard({
                             variant="outline"
                             size="sm"
                             onClick={handleDelete}
-                            className="flex-1 text-xs text-red-600 hover:text-red-700 hover:border-red-300"
+                            className="flex-1 text-xs bg-transparent dark:bg-transparent text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:border-red-300 dark:hover:border-red-600 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
                         >
                             <Trash2 className="w-3 h-3 mr-1" />
                             Delete

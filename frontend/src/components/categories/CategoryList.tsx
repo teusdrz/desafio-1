@@ -62,12 +62,12 @@ export default function CategoryList() {
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 {/* Search */}
                 <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground dark:text-gray-500 w-4 h-4" />
                     <Input
                         placeholder="Search categories..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
+                        className="pl-10 bg-white dark:bg-gray-950 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
                     />
                 </div>
 
@@ -91,16 +91,16 @@ export default function CategoryList() {
                     ))}
                 </div>
             ) : (
-                <Card>
+                <Card className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
                     <CardContent className="py-12">
                         <div className="text-center">
-                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-                                <Search className="w-8 h-8 text-muted-foreground" />
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted dark:bg-gray-800 flex items-center justify-center">
+                                <Search className="w-8 h-8 text-muted-foreground dark:text-gray-500" />
                             </div>
-                            <h3 className="text-lg font-semibold text-foreground mb-2">
+                            <h3 className="text-lg font-semibold text-foreground dark:text-white mb-2">
                                 {searchTerm ? 'No categories found' : 'No categories yet'}
                             </h3>
-                            <p className="text-muted-foreground mb-6">
+                            <p className="text-muted-foreground dark:text-gray-400 mb-6">
                                 {searchTerm
                                     ? 'Try adjusting your search criteria'
                                     : 'Get started by creating your first category'}
@@ -117,7 +117,7 @@ export default function CategoryList() {
             {/* Category Form Modal */}
             {isFormOpen && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-background rounded-lg max-w-md w-full">
+                    <div className="bg-background dark:bg-gray-950 border dark:border-gray-800 rounded-lg max-w-md w-full">
                         <CategoryForm
                             category={editingCategory}
                             onSuccess={handleFormSuccess}
