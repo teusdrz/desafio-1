@@ -11,6 +11,12 @@ using Hypesoft.Infrastructure.Configurations;
 using Hypesoft.API.Middlewares;
 using Hypesoft.API.Filters;
 using Hypesoft.API.Authorization;
+using Hypesoft.API.GraphQL.Types;
+using Hypesoft.API.GraphQL.Queries;
+using Hypesoft.API.GraphQL.Mutations;
+using Hypesoft.API.GraphQL.Subscriptions;
+using Hypesoft.API.Hubs;
+using Hypesoft.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +99,44 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddFluentValidationAutoValidation()
                .AddFluentValidationClientsideAdapters();
 
+// GraphQL Configuration
+builder.Services
+    .AddGraphQLServer()
+    .AddQueryType()
+    .AddMutationType()
+    .AddSubscriptionType()
+    .AddTypeExtension<ProductQueries>()
+    .AddTypeExtension<CategoryQueries>()
+    .AddTypeExtension<ProductMutations>()
+    .AddTypeExtension<CategoryMutations>()
+    .AddTypeExtension<ProductSubscriptions>()
+    .AddTypeExtension<CategorySubscriptions>()
+    .AddType<ProductType>()
+    .AddType<CategoryType>()
+    .AddFiltering()
+    .AddSorting()
+    .AddProjections()
+    .AddInMemorySubscriptions()
+    .SetRequestOptions(() => new HotChocolate.Execution.Options.RequestExecutorOptions
+    {
+        ExecutionTimeout = TimeSpan.FromSeconds(30),
+        IncludeExceptionDetails = builder.Environment.IsDevelopment()
+    });
+
+// SignalR Configuration
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = builder.Environment.IsDevelopment();
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+    options.HandshakeTimeout = TimeSpan.FromSeconds(15);
+    options.MaximumReceiveMessageSize = 32768; // 32KB
+});
+
+// Register SignalR services
+builder.Services.AddScoped<ISignalRNotificationService, SignalRNotificationService>();
+builder.Services.AddScoped<IGraphQLEventService, GraphQLEventService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -150,6 +194,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHealthChecks("/health");
+
+// GraphQL endpoints
+app.MapGraphQL("/graphql");
+
+// SignalR Hubs
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 // Simple test endpoint
 app.MapGet("/api/test", () => new { Message = "Hello from API", Time = DateTime.UtcNow });
