@@ -18,6 +18,7 @@ import {
     Users,
     FileText
 } from 'lucide-react'
+import { CustomLogoIcon } from '@/components/icons/CustomLogoIcon'
 import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -85,7 +86,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 {/* Logo */}
                 <div className="flex items-center px-6 py-6 border-b border-gray-200 dark:border-gray-800">
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                        <Package className="w-5 h-5 text-white" />
+                        <CustomLogoIcon className="w-5 h-5 text-white" />
                     </div>
                     <div>
                         <h1 className="text-lg font-bold text-gray-900 dark:text-white">HyperSense</h1>

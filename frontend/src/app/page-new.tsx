@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Package, FolderOpen, Users, CheckCircle, Zap, Shield, TrendingUp } from 'lucide-react';
+import { CustomLogoIcon } from '@/components/icons/CustomLogoIcon';
 import Dashboard from '@/components/dashboard/Dashboard';
 
 export default function HomePage() {
@@ -92,7 +93,7 @@ export default function HomePage() {
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-                            <Package className="w-5 h-5 text-white" />
+                            <CustomLogoIcon className="w-5 h-5 text-white" />
                         </div>
                         <div>
                             <h1 className="text-lg font-bold text-gray-900">ShopSense</h1>
