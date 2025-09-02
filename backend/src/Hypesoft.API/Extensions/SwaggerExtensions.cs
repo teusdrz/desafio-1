@@ -119,7 +119,7 @@ Example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'",
 
             foreach (var xmlFile in xmlFiles)
             {
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
                 if (File.Exists(xmlPath))
                 {
                     c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
