@@ -11,11 +11,16 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { CategoryCard } from '@/components/categories/CategoryCard'
 import { CategoryForm } from '@/components/forms/CategoryForm'
 import { Plus, Search } from 'lucide-react'
+import { useTheme } from '@/components/theme-provider'
 
 export default function CategoryList() {
+    const { theme } = useTheme()
     const [searchTerm, setSearchTerm] = useState('')
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+
+    // Dynamic colors based on theme
+    const modalBg = theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-background border'
 
     const { data: categories, isLoading, refetch } = useQuery({
         queryKey: ['categories'],
@@ -117,7 +122,7 @@ export default function CategoryList() {
             {/* Category Form Modal */}
             {isFormOpen && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-background dark:bg-gray-950 border dark:border-gray-800 rounded-lg max-w-md w-full">
+                    <div className={`rounded-lg max-w-md w-full ${modalBg}`}>
                         <CategoryForm
                             category={editingCategory}
                             onSuccess={handleFormSuccess}

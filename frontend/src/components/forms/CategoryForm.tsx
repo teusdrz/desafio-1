@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { X, Save } from 'lucide-react'
+import { useTheme } from '@/components/theme-provider'
 
 const categorySchema = z.object({
     name: z.string().min(1, 'Category name is required').max(50, 'Name too long'),
@@ -27,8 +28,15 @@ interface CategoryFormProps {
 }
 
 export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProps) {
+    const { theme } = useTheme()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+
+    // Dynamic colors based on theme
+    const modalBg = theme === 'dark' ? 'bg-gray-900' : 'bg-white'
+    const cardBg = theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+    const titleColor = theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
+    const textColor = theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
 
     const {
         register,
@@ -64,9 +72,10 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
     }
 
     return (
-        <Card className="w-full">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>
+        <Card className={`w-full ${cardBg}`}>
+            <CardHeader className={`flex flex-row items-center justify-between ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
+                }`}>
+                <CardTitle className={titleColor}>
                     {category ? 'Edit Category' : 'Create New Category'}
                 </CardTitle>
                 <Button
@@ -89,12 +98,12 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
 
                     {/* Category Name */}
                     <div className="space-y-2">
-                        <Label htmlFor="name">Category Name *</Label>
+                        <Label htmlFor="name" className={titleColor}>Category Name *</Label>
                         <Input
                             id="name"
                             {...register('name')}
                             placeholder="Enter category name"
-                            className={errors.name ? 'border-destructive' : ''}
+                            className={`${errors.name ? 'border-destructive' : ''} ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'}`}
                         />
                         {errors.name && (
                             <p className="text-sm text-destructive">{errors.name.message}</p>
@@ -103,13 +112,16 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
 
                     {/* Description */}
                     <div className="space-y-2">
-                        <Label htmlFor="description">Description *</Label>
+                        <Label htmlFor="description" className={titleColor}>Description *</Label>
                         <textarea
                             id="description"
                             {...register('description')}
                             placeholder="Enter category description"
-                            rows={3}
-                            className={`w-full px-3 py-2 border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-vertical ${errors.description ? 'border-destructive' : 'border-input'
+                            rows={4}
+                            className={`w-full px-3 py-2 border rounded-md resize-vertical focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${errors.description ? 'border-destructive' : ''
+                                } ${theme === 'dark'
+                                    ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400'
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'
                                 }`}
                         />
                         {errors.description && (

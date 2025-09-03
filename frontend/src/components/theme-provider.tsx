@@ -67,9 +67,7 @@ export function ThemeProvider({
             {children}
         </ThemeProviderContext.Provider>
     )
-}
-
-export const useTheme = () => {
+}export const useTheme = () => {
     const context = useContext(ThemeProviderContext)
 
     if (context === undefined)

@@ -2,14 +2,16 @@
 
 import { useState, useMemo } from 'react'
 import { ProductCard } from '@/components/products/ProductCard'
-import { ProductForm } from '@/components/products/ProductForm'
+import { ProductForm } from '@/components/forms/ProductForm'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Search, Filter, Grid3X3, List, Package, TrendingUp, AlertTriangle } from 'lucide-react'
 import { Product } from '@/types/product'
+import { Category } from '@/types/category'
 import { AuthGuard } from '@/components/auth/AuthGuard'
+import { useTheme } from '@/components/theme-provider'
 
 // Mock data for demonstration
 const mockProducts: Product[] = [
@@ -94,6 +96,10 @@ export default function ProductsPage() {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
     const [showForm, setShowForm] = useState(false)
     const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+    const { theme } = useTheme()
+
+    // Dynamic theme-based styles
+    const modalBg = theme === 'dark' ? 'bg-gray-900' : 'bg-white'
 
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,6 +109,15 @@ export default function ProductsPage() {
     })
 
     const categories = Array.from(new Set(products.map(p => p.categoryName)))
+    const categoriesData = categories.map((name, index) => ({
+        id: (index + 1).toString(),
+        name,
+        description: `Categoria ${name}`,
+        isActive: true,
+        productsCount: products.filter(p => p.categoryName === name).length,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    }))
     const lowStockCount = products.filter(p => p.isLowStock).length
     const outOfStockCount = products.filter(p => p.stockQuantity === 0).length
     const totalValue = products.reduce((sum, p) => sum + (p.price * p.stockQuantity), 0)
@@ -315,10 +330,14 @@ export default function ProductsPage() {
                     {/* Product Form Modal */}
                     {showForm && (
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                            <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                            <div className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto ${modalBg} rounded-lg`}>
                                 <ProductForm
                                     product={editingProduct}
-                                    onSave={handleSave}
+                                    categories={categoriesData}
+                                    onSuccess={() => {
+                                        setShowForm(false)
+                                        setEditingProduct(null)
+                                    }}
                                     onCancel={() => {
                                         setShowForm(false)
                                         setEditingProduct(null)

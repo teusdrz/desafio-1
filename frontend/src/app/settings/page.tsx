@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Settings, User, Bell, Shield, Database, Mail, Globe, Save } from 'lucide-react'
+import { Settings, User, Bell, Shield, Database, Mail, Globe, Save, Download } from 'lucide-react'
 import { AuthGuard } from '@/components/auth/AuthGuard'
+import { ExportImportManager } from '@/components/settings/ExportImportManager'
 
 const settingsData = {
     profile: {
@@ -51,7 +52,8 @@ export default function SettingsPage() {
         { id: 'profile', label: 'Profile', icon: User },
         { id: 'notifications', label: 'Notifications', icon: Bell },
         { id: 'security', label: 'Security', icon: Shield },
-        { id: 'system', label: 'System', icon: Database }
+        { id: 'system', label: 'System', icon: Database },
+        { id: 'data', label: 'Data Management', icon: Download }
     ]
 
     return (
@@ -330,6 +332,32 @@ export default function SettingsPage() {
                                     </div>
                                 </CardContent>
                             </Card>
+                        )}
+
+                        {/* Data Management Tab */}
+                        {activeTab === 'data' && (
+                            <div className="space-y-6">
+                                <Card className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                                            <Download className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                                            Data Management
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <ExportImportManager
+                                            onExport={(type) => {
+                                                console.log('Exported:', type)
+                                                // Handle export completion
+                                            }}
+                                            onImport={(file, type) => {
+                                                console.log('Importing:', file.name, 'for', type)
+                                                // Handle file import
+                                            }}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </div>
                         )}
                     </div>
                 </div>

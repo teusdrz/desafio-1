@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { X, Save } from 'lucide-react'
+import { useTheme } from '@/components/theme-provider'
 
 const productSchema = z.object({
     name: z.string().min(1, 'Product name is required').max(100, 'Name too long'),
@@ -34,6 +35,13 @@ interface ProductFormProps {
 export function ProductForm({ product, categories, onSuccess, onCancel }: ProductFormProps) {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const { theme } = useTheme()
+
+    // Dynamic theme-based styles
+    const modalBg = theme === 'dark' ? 'bg-gray-900' : 'bg-white'
+    const cardBg = theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+    const titleColor = theme === 'dark' ? 'text-gray-100' : 'text-gray-900'
+    const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
 
     const {
         register,
@@ -84,9 +92,9 @@ export function ProductForm({ product, categories, onSuccess, onCancel }: Produc
     }
 
     return (
-        <Card className="w-full">
+        <Card className={`w-full ${cardBg}`}>
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>
+                <CardTitle className={titleColor}>
                     {product ? 'Edit Product' : 'Create New Product'}
                 </CardTitle>
                 <Button
@@ -110,12 +118,12 @@ export function ProductForm({ product, categories, onSuccess, onCancel }: Produc
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Product Name */}
                         <div className="space-y-2">
-                            <Label htmlFor="name">Product Name *</Label>
+                            <Label htmlFor="name" className={titleColor}>Product Name *</Label>
                             <Input
                                 id="name"
                                 {...register('name')}
                                 placeholder="Enter product name"
-                                className={errors.name ? 'border-destructive' : ''}
+                                className={`${errors.name ? 'border-destructive' : ''} ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'}`}
                             />
                             {errors.name && (
                                 <p className="text-sm text-destructive">{errors.name.message}</p>
@@ -124,11 +132,14 @@ export function ProductForm({ product, categories, onSuccess, onCancel }: Produc
 
                         {/* Category */}
                         <div className="space-y-2">
-                            <Label htmlFor="categoryId">Category *</Label>
+                            <Label htmlFor="categoryId" className={titleColor}>Category *</Label>
                             <select
                                 id="categoryId"
                                 {...register('categoryId')}
-                                className={`w-full px-3 py-2 border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${errors.categoryId ? 'border-destructive' : 'border-input'
+                                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${errors.categoryId ? 'border-destructive' : ''
+                                    } ${theme === 'dark'
+                                        ? 'bg-gray-700 border-gray-600 text-gray-100'
+                                        : 'bg-white border-gray-300 text-gray-900'
                                     }`}
                             >
                                 <option value="">Select a category</option>
@@ -145,9 +156,9 @@ export function ProductForm({ product, categories, onSuccess, onCancel }: Produc
 
                         {/* Price */}
                         <div className="space-y-2">
-                            <Label htmlFor="price">Price *</Label>
+                            <Label htmlFor="price" className={titleColor}>Price *</Label>
                             <div className="relative">
-                                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                                <span className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                     $
                                 </span>
                                 <Input
@@ -156,7 +167,7 @@ export function ProductForm({ product, categories, onSuccess, onCancel }: Produc
                                     step="0.01"
                                     {...register('price', { valueAsNumber: true })}
                                     placeholder="0.00"
-                                    className={`pl-8 ${errors.price ? 'border-destructive' : ''}`}
+                                    className={`pl-8 ${errors.price ? 'border-destructive' : ''} ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'}`}
                                 />
                             </div>
                             {errors.price && (
@@ -166,13 +177,13 @@ export function ProductForm({ product, categories, onSuccess, onCancel }: Produc
 
                         {/* Stock Quantity */}
                         <div className="space-y-2">
-                            <Label htmlFor="stockQuantity">Stock Quantity *</Label>
+                            <Label htmlFor="stockQuantity" className={titleColor}>Stock Quantity *</Label>
                             <Input
                                 id="stockQuantity"
                                 type="number"
                                 {...register('stockQuantity', { valueAsNumber: true })}
                                 placeholder="0"
-                                className={errors.stockQuantity ? 'border-destructive' : ''}
+                                className={`${errors.stockQuantity ? 'border-destructive' : ''} ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'}`}
                             />
                             {errors.stockQuantity && (
                                 <p className="text-sm text-destructive">{errors.stockQuantity.message}</p>
@@ -182,13 +193,16 @@ export function ProductForm({ product, categories, onSuccess, onCancel }: Produc
 
                     {/* Description */}
                     <div className="space-y-2">
-                        <Label htmlFor="description">Description *</Label>
+                        <Label htmlFor="description" className={titleColor}>Description *</Label>
                         <textarea
                             id="description"
                             {...register('description')}
                             placeholder="Enter product description"
                             rows={4}
-                            className={`w-full px-3 py-2 border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 resize-vertical ${errors.description ? 'border-destructive' : 'border-input'
+                            className={`w-full px-3 py-2 border rounded-md resize-vertical focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${errors.description ? 'border-destructive' : ''
+                                } ${theme === 'dark'
+                                    ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder:text-gray-400'
+                                    : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'
                                 }`}
                         />
                         {errors.description && (

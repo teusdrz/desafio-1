@@ -4,8 +4,9 @@ import { useQuery } from '@tanstack/react-query'
 import { dashboardService } from '@/services/dashboard-service'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { AlertTriangle, Package, DollarSign, TrendingUp, Star, Filter, MoreHorizontal } from 'lucide-react'
+import { AlertTriangle, Package, DollarSign, TrendingUp, Star, Filter, MoreHorizontal, Calendar, Download } from 'lucide-react'
 import { ProductsByCategoryChart } from '@/components/charts/ProductsByCategoryChart'
+import { SalesAnalyticsChart } from '@/components/charts/SalesAnalyticsChart'
 import { LowStockProducts } from '@/components/dashboard/LowStockProducts'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -98,6 +99,31 @@ export default function Dashboard() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Sales Analytics Section */}
+            <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800">
+                <CardHeader>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Sales Analytics</CardTitle>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Comprehensive sales insights and trends</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Button variant="outline" size="sm" className="bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <Calendar className="w-4 h-4 mr-2" />
+                                Last 7 days
+                            </Button>
+                            <Button variant="outline" size="sm" className="bg-transparent dark:bg-transparent border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                <Download className="w-4 h-4 mr-2" />
+                                Export
+                            </Button>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <SalesAnalyticsChart />
+                </CardContent>
+            </Card>
 
             {/* Recent Activities Section */}
             <Card className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800">

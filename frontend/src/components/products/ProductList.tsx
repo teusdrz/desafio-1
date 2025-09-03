@@ -13,12 +13,17 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { ProductCard } from '@/components/products/ProductCard'
 import { ProductForm } from '@/components/forms/ProductForm'
 import { Plus, Search, Filter } from 'lucide-react'
+import { useTheme } from '@/components/theme-provider'
 
 export default function ProductList() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedCategory, setSelectedCategory] = useState<string>('')
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+    const { theme } = useTheme()
+
+    // Dynamic theme-based styles
+    const modalBg = theme === 'dark' ? 'bg-gray-900' : 'bg-white'
 
     const { data: productsResponse, isLoading: productsLoading, refetch: refetchProducts } = useQuery({
         queryKey: ['products', searchTerm, selectedCategory],
@@ -146,7 +151,7 @@ export default function ProductList() {
             {/* Product Form Modal */}
             {isFormOpen && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className={`${modalBg} rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto`}>
                         <ProductForm
                             product={editingProduct}
                             categories={categories || []}
